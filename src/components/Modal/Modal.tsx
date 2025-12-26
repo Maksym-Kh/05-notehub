@@ -10,11 +10,13 @@ interface Props{
 }
 
 
-const modalRootElem = document.querySelector('#modal-root') as HTMLDivElement;
-
 export default function Modal({ onClose, children }: Props) {
   
+  const modalRootElem = document.querySelector('#modal-root') as HTMLDivElement;
+
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
     const handleEsc = (e: KeyboardEvent) => {
       if (e.code === "Escape") {
         onClose();
@@ -24,6 +26,7 @@ export default function Modal({ onClose, children }: Props) {
     window.addEventListener('keydown', handleEsc);
     
     return () => {
+      document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleEsc);
     }
   }, [onClose]);

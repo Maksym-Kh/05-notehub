@@ -1,27 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import css from './NoteList.module.css'
-import { fetchNotes, deleteNote } from '../../services/noteService'
-import { useEffect } from 'react';
-
-import Loader from '../Loader/Loader';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
-import EmptyMessage from '../EmptyMessage/EmptyMessage';
+import { deleteNote } from '../../services/noteService'
+import type { Note } from '../../types/note';
 
 interface Props{
-    pageNumber: number;
-    query: string;
-    onDataLoaded: (totalPages: number) => void;
+    notes: Note[];
 }
 
-export default function NoteList({ pageNumber, query, onDataLoaded }: Props) {
-    
+export default function NoteList({notes}: Props) {
     const queryClient = useQueryClient();
 
-    const { data, isLoading, isError } = useQuery({
-        queryKey: ['notes', pageNumber, query],
-        queryFn: () => fetchNotes({ pageNumber, query }),
-    })
-    
     const { mutate: mutateDelete } = useMutation({
         mutationKey: ["deleteNote"],
         mutationFn: deleteNote,
@@ -33,28 +21,10 @@ export default function NoteList({ pageNumber, query, onDataLoaded }: Props) {
         }
     });
 
-    useEffect(() => {
-        if (data?.totalPages) {
-            onDataLoaded(data.totalPages);
-        }
-    }, [data?.totalPages, onDataLoaded]);
-    
-    if (isLoading) {
-        return <Loader />;
-    }
-
-    if (isError) {
-        return <ErrorMessage />;
-    }
-
-    if (!data || data.notes.length === 0) {
-        return <EmptyMessage />;
-    }
-
     return (
 
         <ul className={css.list}>
-            {data?.notes.map((note) => (
+            {notes.map((note) => (
                 <li key={note.id} className={css.listItem}>
                     <h2 className={css.title}>{note.title}</h2>
                     <p className={css.content}>{note.content}</p>

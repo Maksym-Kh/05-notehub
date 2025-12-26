@@ -1,8 +1,8 @@
 import axios from "axios";
-import type { note } from "../types/note";
+import type { Note } from "../types/note";
 
 interface noteResponse{
-    notes: note[],
+    notes: Note[],
     totalPages: number,
 }
 
@@ -37,13 +37,13 @@ interface createNoteProps {
     tag: string,
 };
 
-export const createNote = async (noteInfo: createNoteProps): Promise<note> =>{
-    const response = await axios.post<note>('/notes', noteInfo);
+export const createNote = async (noteInfo: createNoteProps): Promise<Note> =>{
+    const response = await axios.post<Note>('/notes', noteInfo);
     return response.data;
     
 }
 
-export const deleteNote = async (id: string): Promise<void> => {
-    const response = await axios.delete(`/notes/${id}`);
+export const deleteNote = async (id: string): Promise<Note> => {
+    const response = await axios.delete<Note>(`/notes/${id}`);
     return response.data;
 }
