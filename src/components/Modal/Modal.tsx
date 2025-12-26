@@ -1,21 +1,17 @@
-import { useEffect } from 'react';
-import css from './Modal.module.css'
-import { createPortal } from 'react-dom'
+import { useEffect } from "react";
+import css from "./Modal.module.css";
+import { createPortal } from "react-dom";
 
-
-
-interface Props{
+interface Props {
   onClose: () => void;
-  children: React.ReactNode; 
+  children: React.ReactNode;
 }
 
-
 export default function Modal({ onClose, children }: Props) {
-  
-  const modalRootElem = document.querySelector('#modal-root') as HTMLDivElement;
+  const modalRootElem = document.querySelector("#modal-root") as HTMLDivElement;
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.code === "Escape") {
@@ -23,12 +19,12 @@ export default function Modal({ onClose, children }: Props) {
       }
     };
 
-    window.addEventListener('keydown', handleEsc);
-    
+    window.addEventListener("keydown", handleEsc);
+
     return () => {
-      document.body.style.overflow = 'unset';
-      window.removeEventListener('keydown', handleEsc);
-    }
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleEsc);
+    };
   }, [onClose]);
 
   return createPortal(
@@ -39,7 +35,7 @@ export default function Modal({ onClose, children }: Props) {
       aria-modal="true"
     >
       <div className={css.modal} onClick={(e) => e.stopPropagation()}>
-        {children}          
+        {children}
       </div>
     </div>,
     modalRootElem
